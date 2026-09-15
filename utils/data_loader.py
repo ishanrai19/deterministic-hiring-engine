@@ -1,0 +1,166 @@
+"""
+data_loader.py
+---------------
+Adapters that build the two contract objects the Matching Agent consumes,
+per the team's Pipeline Workflow & Data Contracts doc:
+
+  JobDescription:
+    { job_id, title, required_skills, preferred_skills,
+      min_experience_years, min_education, raw_text }
+
+  CandidateProfile (from the Resume Screening Agent, or adapted from the
+  flat sample dataset for local testing):
+    { candidate_id, skills, evidence_counts, experience_years,
+      education_level, resume_text, applied_job_id }
+
+Two loaders are provided:
+
+  A) load_candidate_from_screening_json() -- adapts the Resume Screening
+     Agent's structured JSON output (the real production input).
+
+  B) load_dataset_csv() -- adapts the flat sample/eval dataset
+     (ats_resume_dataset_elite_v3.csv-style) into (candidates, jobs).
+
+DATA LEAKAGE BOUNDARY: skill_match_score, experience_match, education_match,
+final_score, shortlisted, similarity_score are evaluation labels, per the
+contract doc. load_dataset_csv() reads them into a separate
+job['_reference_scores'] / a parallel `labels` list -- NEVER into the
+CandidateProfile/JobDescription fields that the Matching Agent's scoring
+functions read. utils/scoring.build_feature_vector() only reads the
+non-label fields, so this boundary is enforced structurally, not just by
+convention.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from typing import Dict, List, Optional, Tuple
+
+import pandas as pd
+
+
+def _split_skills(raw) -> List[str]:
+    if raw is None:
+        return []
+    if isinstance(raw, list):
+        return [str(s).strip() for s in raw if str(s).strip()]
+    return [s.strip() for s in str(raw).split(",") if s.strip()]
+
+
+def derive_job_id(job_description_text: str) -> str:
+    """job_id is derived (hash of job_description) -- it is not a dataset column."""
+    digest = hashlib.md5((job_description_text or "").encode("utf-8")).hexdigest()
+    return f"job_{digest[:10]}"
+
+
+# --------------------------------------------------------------------------- #
+# A) Resume Screening Agent JSON -> CandidateProfile (internal shape)
+# --------------------------------------------------------------------------- #
+def load_candidate_from_screening_json(profile: Dict, applied_job_id: Optional[str] = None) -> Dict:
+    skills = []
+    evidence_counts: Dict[str, int] = {}
+    for s in profile.get("skills", []):
+        name = s.get("skill_name") or s.get("raw_text")
+        if not name:
+            continue
+        skills.append(name)
+        evidence_counts[name] = s.get("evidence_count", len(s.get("sources", [])))
+
+    from utils.scoring import education_rank
+
+    education_entries = profile.get("education", []) or []
+    best_degree, best_rank = "", -1
+    for edu in education_entries:
+        degree = edu.get("degree", "")
+        rank = education_rank(degree)
+        if rank > best_rank:
+            best_rank, best_degree = rank, degree
+
+    resume_text_parts = [profile.get("source_resume_path", "")] + skills
+    for wh in profile.get("work_history", []) or []:
+        resume_text_parts.append(f"{wh.get('title', '')} at {wh.get('company', '')}")
+
+    return {
+        "candidate_id": profile.get("candidate_id"),
+        "applied_job_id": applied_job_id,
+        "skills": skills,
+        "evidence_counts": evidence_counts,
+        "experience_years": profile.get("experience_years", 0.0),
+        "education_level": best_degree,
+        "resume_text": " ".join(p for p in resume_text_parts if p),
+    }
+
+
+# --------------------------------------------------------------------------- #
+# B) Flat CSV dataset -> (CandidateProfile[], JobDescription[])
+# --------------------------------------------------------------------------- #
+def load_dataset_csv(path: str) -> Tuple[List[Dict], List[Dict], Dict[str, int]]:
+    """
+    Load the flat evaluation dataset and split it into:
+      - candidates: List[CandidateProfile]  (agent input)
+      - jobs:       List[JobDescription]     (agent input; label columns kept
+                                               separately under _reference_scores)
+      - labels_by_candidate_id: Dict[candidate_id, shortlisted:int]  (eval-only,
+                                               kept OUT of the candidate/job dicts)
+    """
+    df = pd.read_csv(path, sep="\t") if _looks_like_tsv(path) else pd.read_csv(path)
+
+    candidates: List[Dict] = []
+    jobs: List[Dict] = []
+    labels_by_candidate_id: Dict[str, int] = {}
+
+    for _, row in df.iterrows():
+        resume_id = str(row.get("resume_id"))
+        job_description_text = str(row.get("job_description", ""))
+        job_id = derive_job_id(job_description_text)
+
+        candidates.append(
+            {
+                "candidate_id": resume_id,
+                "applied_job_id": job_id,
+                "skills": _split_skills(row.get("resume_skills")),
+                "evidence_counts": {},
+                "experience_years": float(row.get("experience_years", 0) or 0),
+                "education_level": row.get("education_level", ""),
+                "resume_text": str(row.get("resume_text", "")),
+            }
+        )
+
+        jobs.append(
+            {
+                "job_id": job_id,
+                "title": row.get("job_role", ""),
+                "required_skills": _split_skills(row.get("required_skills")),
+                "preferred_skills": [],  # not present in this dataset
+                "min_experience_years": float(row.get("job_experience_required", 0) or 0),
+                "min_education": None,  # not present as a column; see contract doc
+                "raw_text": job_description_text,
+                # EVAL-ONLY reference labels. build_feature_vector() never reads this key.
+                "_reference_scores": {
+                    "skill_match_score": row.get("skill_match_score"),
+                    "experience_match": row.get("experience_match"),
+                    "education_match": row.get("education_match"),
+                    "final_score": row.get("final_score"),
+                    "shortlisted": row.get("shortlisted"),
+                    "similarity_score": row.get("similarity_score"),
+                },
+            }
+        )
+
+        shortlisted = row.get("shortlisted")
+        if pd.notna(shortlisted):
+            labels_by_candidate_id[resume_id] = int(shortlisted)
+
+    return candidates, jobs, labels_by_candidate_id
+
+
+def _looks_like_tsv(path: str) -> bool:
+    with open(path, "r", encoding="utf-8", errors="ignore") as f:
+        first_line = f.readline()
+    return "\t" in first_line and "," not in first_line.split("\t")[0]
+
+
+def load_json_file(path: str) -> Dict:
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
