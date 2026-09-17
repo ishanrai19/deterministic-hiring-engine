@@ -3,25 +3,36 @@ run_matching_demo.py
 ---------------------
 Run from the project root:
 
+    # small bundled sample (11 rows)
     python -m agents.matching.run_matching_demo
 
+    # the real dataset
+    python -m agents.matching.run_matching_demo --data-path data/raw/ats_resume_dataset_elite_v3.csv
+
 What it does:
-  1. Loads data/raw/ats_resume_dataset_sample.tsv into CandidateProfile /
-     JobDescription lists (label columns kept separate, per the data
-     contract's leakage rule).
-  2. Runs every candidate against the job it applied to using the default
-     "weighted_heuristic" scoring_method and prints a RankedCandidate report.
-  3. Trains "supervised_ranker" on this data (shortlisted as target, the
-     four engineered features as input) and reports train/test accuracy,
-     AUC, and correlation of fit_score with final_score -- exactly the
-     evaluation the contract doc specifies ("use shortlisted and
-     final_score, not skill_match_score").
-  4. Re-scores every candidate with all three scoring_methods side by side.
-  5. Ranks candidates within each job_role bucket (contract's documented
-     workaround for degenerate per-job ranking).
-  6. Writes data/processed/matching_results.csv for the dashboard/eval report.
+  1. Loads the dataset into CandidateProfile / JobDescription lists
+     (label columns kept separate, per the data contract's leakage rule).
+  2. Prints a handful of individual RankedCandidate reports
+     (--print-limit, default 5) using scoring_method='weighted_heuristic'.
+  3. Trains scoring_method='supervised_ranker' on the full dataset
+     (shortlisted as target, the four engineered features as input) and
+     reports train/test accuracy, AUC, and correlation of fit_score with
+     final_score -- exactly the evaluation the contract doc specifies.
+  4. Scores every row with all three scoring_methods and writes the full
+     table to data/processed/matching_results.csv.
+  5. Prints per-job_role shortlist-rate summaries (not a full per-candidate
+     dump -- there could be thousands of rows).
+
+CLI flags:
+  --data-path      Path to the dataset CSV/TSV (default: bundled sample).
+  --print-limit N  How many individual candidate reports to print (default 5).
+  --shortlist-threshold X   Override the default 0.5 cutoff.
+  --output-dir     Where to write matching_results.csv / supervised_ranker.json
+                    (default: data/processed).
 """
 
+import argparse
+import json
 import os
 import sys
 
@@ -34,9 +45,8 @@ from utils.data_loader import load_candidate_from_screening_json, load_dataset_c
 from utils.supervised_ranker import SupervisedRanker
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# RAW_PATH = os.path.join(ROOT, "data", "raw", "ats_resume_dataset_sample.tsv")
-RAW_PATH = os.path.join(ROOT, "data", "raw", "ats_resume_dataset_elite_v3.csv")
-PROCESSED_DIR = os.path.join(ROOT, "data", "processed")
+DEFAULT_SAMPLE_PATH = os.path.join(ROOT, "data", "raw", "ats_resume_dataset_sample.tsv")
+DEFAULT_OUTPUT_DIR = os.path.join(ROOT, "data", "processed")
 
 
 def section(title: str):
@@ -45,10 +55,10 @@ def section(title: str):
     print("=" * 90)
 
 
-def run_weighted_heuristic(agent, candidates, jobs):
-    section("1) RANKED CANDIDATE REPORTS -- scoring_method='weighted_heuristic'")
+def print_sample_reports(agent, candidates, jobs, limit):
+    section(f"1) SAMPLE RANKED CANDIDATE REPORTS (first {limit}) -- scoring_method='weighted_heuristic'")
     jobs_by_id = {j["job_id"]: j for j in jobs}
-    for c in candidates:
+    for c in candidates[:limit]:
         job = jobs_by_id[c["applied_job_id"]]
         r = agent.match(c, job)
         print(f"\n[{r['candidate_id']}] -> {r['job_title']}  fit_score={r['fit_score']}  "
@@ -59,7 +69,7 @@ def run_weighted_heuristic(agent, candidates, jobs):
             print(f"   - {line}")
 
 
-def train_supervised_ranker(candidates, jobs, labels_by_candidate_id):
+def train_supervised_ranker(candidates, jobs, labels_by_candidate_id, output_dir):
     section("2) TRAINING scoring_method='supervised_ranker'  (eval vs. shortlisted & final_score)")
     labels = [labels_by_candidate_id.get(c["candidate_id"], 0) for c in candidates]
     ranker = SupervisedRanker()
@@ -68,18 +78,17 @@ def train_supervised_ranker(candidates, jobs, labels_by_candidate_id):
     print(f"  test_accuracy: {metrics.get('test_accuracy')}")
     print(f"  test_auc: {metrics.get('test_auc', 'n/a (single class in test split)')}")
     print(f"  fit_score vs. final_score correlation: {metrics.get('fit_score_vs_final_score_corr', 'n/a')}")
-    print("  (NOTE: this sample dataset has only 11 rows -- these numbers are illustrative, "
-          "not statistically meaningful. Re-run against the full 6,000-row "
-          "ats_resume_dataset_elite_v3.csv for real evaluation numbers.)")
-    os.makedirs(PROCESSED_DIR, exist_ok=True)
-    model_path = os.path.join(PROCESSED_DIR, "supervised_ranker.json")
+    if metrics["n_train"] + metrics["n_test"] < 100:
+        print("  (NOTE: small dataset -- these numbers are illustrative, not statistically meaningful.)")
+    os.makedirs(output_dir, exist_ok=True)
+    model_path = os.path.join(output_dir, "supervised_ranker.json")
     ranker.save(model_path)
     print(f"Saved trained ranker -> {model_path}")
     return ranker
 
 
-def compare_scoring_methods(candidates, jobs, ranker):
-    section("3) SIDE-BY-SIDE COMPARISON OF ALL THREE scoring_methods")
+def score_all_and_save(candidates, jobs, ranker, output_dir):
+    section(f"3) SCORING ALL {len(candidates)} CANDIDATES WITH ALL THREE scoring_methods")
     jobs_by_id = {j["job_id"]: j for j in jobs}
     agent = MatchingAgent(supervised_ranker=ranker)
 
@@ -90,20 +99,31 @@ def compare_scoring_methods(candidates, jobs, ranker):
         for method in ("weighted_heuristic", "embedding_similarity", "supervised_ranker"):
             r = agent.match(c, job, scoring_method=method)
             row[f"fit_score_{method}"] = r["fit_score"]
+            row[f"shortlisted_{method}"] = r["shortlisted"]
+        row["skill_overlap_pct"] = agent.match(c, job)["skill_overlap"]["overlap_pct"]
         rows.append(row)
 
     df = pd.DataFrame(rows)
-    print(df.to_string(index=False))
+    os.makedirs(output_dir, exist_ok=True)
+    out_path = os.path.join(output_dir, "matching_results.csv")
+    df.to_csv(out_path, index=False)
+    print(f"Wrote {len(df)} rows -> {out_path}")
     return df, agent
 
 
-def rank_within_roles(agent, candidates, jobs):
-    section("4) CANDIDATE RANKING WITHIN EACH job_role BUCKET (weighted_heuristic)")
-    ranked_by_role = agent.rank_by_role(candidates, jobs)
-    for role, ranked in ranked_by_role.items():
-        print(f"\n-- {role} --")
-        for r in ranked:
-            print(f"  #{r['rank']}  {r['candidate_id']:<6} fit_score={r['fit_score']:<7} shortlisted={r['shortlisted']}")
+def print_role_summary(df):
+    section("4) SHORTLIST-RATE SUMMARY BY job_role (weighted_heuristic)")
+    summary = (
+        df.groupby("job_role")
+        .agg(
+            n=("candidate_id", "count"),
+            avg_fit_score=("fit_score_weighted_heuristic", "mean"),
+            shortlist_rate=("shortlisted_weighted_heuristic", "mean"),
+        )
+        .round(4)
+        .sort_values("n", ascending=False)
+    )
+    print(summary.to_string())
 
 
 def run_on_screening_agent_example(agent):
@@ -139,23 +159,48 @@ def run_on_screening_agent_example(agent):
     }
     candidate = load_candidate_from_screening_json(screening_output, applied_job_id=job["job_id"])
     result = agent.match(candidate, job)
-    import json
     print(json.dumps(result, indent=2))
 
 
+def parse_args():
+    p = argparse.ArgumentParser(description="Run the Matching Agent end-to-end on a dataset.")
+    p.add_argument("--data-path", default=DEFAULT_SAMPLE_PATH,
+                    help="Path to the dataset CSV/TSV (default: bundled 11-row sample).")
+    p.add_argument("--print-limit", type=int, default=5,
+                    help="How many individual candidate reports to print (default: 5).")
+    p.add_argument("--shortlist-threshold", type=float, default=0.5,
+                    help="fit_score cutoff for shortlisted=True (default: 0.5).")
+    p.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR,
+                    help="Where to write matching_results.csv / supervised_ranker.json.")
+    p.add_argument("--skip-screening-example", action="store_true",
+                    help="Skip the demo match against a Resume-Screening-Agent-style JSON profile.")
+    return p.parse_args()
+
+
 if __name__ == "__main__":
-    candidates, jobs, labels_by_candidate_id = load_dataset_csv(RAW_PATH)
+    args = parse_args()
 
-    base_agent = MatchingAgent()
-    run_weighted_heuristic(base_agent, candidates, jobs)
+    if not os.path.exists(args.data_path):
+        print(f"ERROR: dataset not found at '{args.data_path}'.")
+        print("Pass the real dataset with, e.g.:")
+        print("  python -m agents.matching.run_matching_demo "
+              "--data-path data/raw/ats_resume_dataset_elite_v3.csv")
+        sys.exit(1)
 
-    ranker = train_supervised_ranker(candidates, jobs, labels_by_candidate_id)
-    comparison_df, full_agent = compare_scoring_methods(candidates, jobs, ranker)
+    print(f"Loading dataset: {args.data_path}")
+    candidates, jobs, labels_by_candidate_id = load_dataset_csv(args.data_path)
+    print(f"Loaded {len(candidates)} candidates / {len(jobs)} job postings "
+          f"({len(labels_by_candidate_id)} with a shortlisted label).")
 
-    rank_within_roles(base_agent, candidates, jobs)
-    run_on_screening_agent_example(full_agent)
+    base_agent = MatchingAgent(shortlist_threshold=args.shortlist_threshold)
+    print_sample_reports(base_agent, candidates, jobs, args.print_limit)
 
-    os.makedirs(PROCESSED_DIR, exist_ok=True)
-    out_path = os.path.join(PROCESSED_DIR, "matching_results.csv")
-    comparison_df.to_csv(out_path, index=False)
-    print(f"\nSaved comparison table -> {out_path}")
+    ranker = train_supervised_ranker(candidates, jobs, labels_by_candidate_id, args.output_dir)
+    results_df, full_agent = score_all_and_save(candidates, jobs, ranker, args.output_dir)
+
+    print_role_summary(results_df)
+
+    if not args.skip_screening_example:
+        run_on_screening_agent_example(full_agent)
+
+    print(f"\nDone. Full results: {os.path.join(args.output_dir, 'matching_results.csv')}")

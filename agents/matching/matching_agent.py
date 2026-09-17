@@ -44,7 +44,8 @@ from __future__ import annotations
 import datetime as _dt
 from typing import Dict, List, Optional
 
-from utils.scoring import build_feature_vector, semantic_similarity
+from utils.scoring import build_feature_vector
+from utils.scoring import semantic_similarity
 from utils.supervised_ranker import SupervisedRanker
 
 DEFAULT_WEIGHTS = {

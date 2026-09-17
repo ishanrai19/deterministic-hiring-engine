@@ -106,6 +106,20 @@ def load_dataset_csv(path: str) -> Tuple[List[Dict], List[Dict], Dict[str, int]]
     """
     df = pd.read_csv(path, sep="\t") if _looks_like_tsv(path) else pd.read_csv(path)
 
+    required_columns = {
+        "resume_id", "resume_text", "resume_skills", "experience_years",
+        "education_level", "job_role", "required_skills",
+        "job_experience_required", "job_description",
+    }
+    missing = required_columns - set(df.columns)
+    if missing:
+        raise ValueError(
+            f"load_dataset_csv: '{path}' is missing expected column(s) {sorted(missing)}. "
+            f"Columns found: {list(df.columns)}. "
+            "If this is a different dataset version, either rename its columns to match, "
+            "or adjust the column names read in this function."
+        )
+
     candidates: List[Dict] = []
     jobs: List[Dict] = []
     labels_by_candidate_id: Dict[str, int] = {}
