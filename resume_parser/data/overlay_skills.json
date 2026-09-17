@@ -1,0 +1,1151 @@
+{
+ "_comment": "IT-focused overlay. ESCO is the canonical cross-sector vocabulary; this file is the extension layer for technologies, brands and acronyms ESCO covers thinly. Overlay entries win over ESCO for the same surface form. IDs are namespaced 'local:' so they can never be mistaken for a real ESCO URI. Grow this from `--unresolved` output, not from memory.",
+ "skills": [
+  {
+   "skill_id": "local:python",
+   "skill_name": "Python",
+   "aliases": [
+    "python",
+    "python3",
+    "python 3",
+    "python programming"
+   ]
+  },
+  {
+   "skill_id": "local:c",
+   "skill_name": "C",
+   "aliases": [
+    "c programming",
+    "c language"
+   ],
+   "acronyms": [
+    "c"
+   ]
+  },
+  {
+   "skill_id": "local:cpp",
+   "skill_name": "C++",
+   "aliases": [
+    "c++",
+    "cpp",
+    "c plus plus"
+   ]
+  },
+  {
+   "skill_id": "local:csharp",
+   "skill_name": "C#",
+   "aliases": [
+    "c#",
+    "csharp",
+    "c sharp"
+   ]
+  },
+  {
+   "skill_id": "local:java",
+   "skill_name": "Java",
+   "aliases": [
+    "java",
+    "core java",
+    "java se"
+   ]
+  },
+  {
+   "skill_id": "local:javascript",
+   "skill_name": "JavaScript",
+   "aliases": [
+    "javascript",
+    "ecmascript"
+   ],
+   "acronyms": [
+    "js"
+   ]
+  },
+  {
+   "skill_id": "local:typescript",
+   "skill_name": "TypeScript",
+   "aliases": [
+    "typescript"
+   ],
+   "acronyms": [
+    "ts"
+   ]
+  },
+  {
+   "skill_id": "local:go",
+   "skill_name": "Go",
+   "aliases": [
+    "golang",
+    "go lang"
+   ]
+  },
+  {
+   "skill_id": "local:rust",
+   "skill_name": "Rust",
+   "aliases": [
+    "rust"
+   ]
+  },
+  {
+   "skill_id": "local:ruby",
+   "skill_name": "Ruby",
+   "aliases": [
+    "ruby",
+    "ruby on rails"
+   ]
+  },
+  {
+   "skill_id": "local:php",
+   "skill_name": "PHP",
+   "aliases": [
+    "php"
+   ]
+  },
+  {
+   "skill_id": "local:scala",
+   "skill_name": "Scala",
+   "aliases": [
+    "scala"
+   ]
+  },
+  {
+   "skill_id": "local:kotlin",
+   "skill_name": "Kotlin",
+   "aliases": [
+    "kotlin"
+   ]
+  },
+  {
+   "skill_id": "local:swift",
+   "skill_name": "Swift",
+   "aliases": [
+    "swift"
+   ]
+  },
+  {
+   "skill_id": "local:r",
+   "skill_name": "R",
+   "aliases": [
+    "r programming",
+    "r language"
+   ],
+   "acronyms": [
+    "r"
+   ]
+  },
+  {
+   "skill_id": "local:matlab",
+   "skill_name": "MATLAB",
+   "aliases": [
+    "matlab"
+   ]
+  },
+  {
+   "skill_id": "local:shell",
+   "skill_name": "Shell Scripting",
+   "aliases": [
+    "shell scripting",
+    "bash scripting",
+    "bash",
+    "powershell"
+   ]
+  },
+  {
+   "skill_id": "local:html_css",
+   "skill_name": "HTML/CSS",
+   "aliases": [
+    "html",
+    "css",
+    "html/css",
+    "html5",
+    "css3",
+    "sass",
+    "tailwind"
+   ]
+  },
+  {
+   "skill_id": "local:dsa",
+   "skill_name": "Data Structures and Algorithms",
+   "aliases": [
+    "data structures",
+    "data structure",
+    "data structures and algorithms",
+    "data structures & algorithms",
+    "algorithms"
+   ],
+   "acronyms": [
+    "dsa"
+   ]
+  },
+  {
+   "skill_id": "local:oop",
+   "skill_name": "Object-Oriented Programming",
+   "aliases": [
+    "object oriented programming",
+    "object-oriented programming",
+    "oops",
+    "object oriented design"
+   ],
+   "acronyms": [
+    "oop"
+   ]
+  },
+  {
+   "skill_id": "local:os",
+   "skill_name": "Operating Systems",
+   "aliases": [
+    "operating systems",
+    "operating system"
+   ]
+  },
+  {
+   "skill_id": "local:dbms",
+   "skill_name": "Database Management",
+   "aliases": [
+    "dbms",
+    "database management systems",
+    "database management"
+   ]
+  },
+  {
+   "skill_id": "local:networking",
+   "skill_name": "Computer Networks",
+   "aliases": [
+    "computer networks",
+    "computer networking",
+    "networking",
+    "advanced computer networks"
+   ]
+  },
+  {
+   "skill_id": "local:socket",
+   "skill_name": "Socket Programming",
+   "aliases": [
+    "socket programming",
+    "sockets"
+   ]
+  },
+  {
+   "skill_id": "local:tcpip",
+   "skill_name": "TCP/IP",
+   "aliases": [
+    "tcp/ip",
+    "tcp ip",
+    "udp",
+    "icmp"
+   ]
+  },
+  {
+   "skill_id": "local:multithreading",
+   "skill_name": "Multithreading",
+   "aliases": [
+    "multithreading",
+    "multithreaded",
+    "concurrency",
+    "parallel programming"
+   ]
+  },
+  {
+   "skill_id": "local:coa",
+   "skill_name": "Computer Architecture",
+   "aliases": [
+    "computer organization & architecture",
+    "computer organization and architecture",
+    "computer architecture"
+   ]
+  },
+  {
+   "skill_id": "local:system_design",
+   "skill_name": "System Design",
+   "aliases": [
+    "system design",
+    "distributed systems",
+    "scalability",
+    "microservices"
+   ]
+  },
+  {
+   "skill_id": "local:compilers",
+   "skill_name": "Compilers",
+   "aliases": [
+    "compiler design",
+    "compilers"
+   ]
+  },
+  {
+   "skill_id": "local:sql",
+   "skill_name": "SQL",
+   "aliases": [
+    "sql",
+    "t-sql",
+    "pl/sql"
+   ]
+  },
+  {
+   "skill_id": "local:mysql",
+   "skill_name": "MySQL",
+   "aliases": [
+    "mysql",
+    "my sql"
+   ]
+  },
+  {
+   "skill_id": "local:postgres",
+   "skill_name": "PostgreSQL",
+   "aliases": [
+    "postgresql",
+    "postgres"
+   ]
+  },
+  {
+   "skill_id": "local:mongodb",
+   "skill_name": "MongoDB",
+   "aliases": [
+    "mongodb",
+    "mongo"
+   ]
+  },
+  {
+   "skill_id": "local:redis",
+   "skill_name": "Redis",
+   "aliases": [
+    "redis"
+   ]
+  },
+  {
+   "skill_id": "local:cassandra",
+   "skill_name": "Cassandra",
+   "aliases": [
+    "cassandra"
+   ]
+  },
+  {
+   "skill_id": "local:elasticsearch",
+   "skill_name": "Elasticsearch",
+   "aliases": [
+    "elasticsearch",
+    "elastic search"
+   ]
+  },
+  {
+   "skill_id": "local:snowflake",
+   "skill_name": "Snowflake",
+   "aliases": [
+    "snowflake"
+   ]
+  },
+  {
+   "skill_id": "local:dynamodb",
+   "skill_name": "DynamoDB",
+   "aliases": [
+    "dynamodb"
+   ]
+  },
+  {
+   "skill_id": "local:react",
+   "skill_name": "React",
+   "aliases": [
+    "react",
+    "react.js",
+    "reactjs"
+   ]
+  },
+  {
+   "skill_id": "local:angular",
+   "skill_name": "Angular",
+   "aliases": [
+    "angular",
+    "angularjs"
+   ]
+  },
+  {
+   "skill_id": "local:vue",
+   "skill_name": "Vue.js",
+   "aliases": [
+    "vue",
+    "vue.js",
+    "vuejs"
+   ]
+  },
+  {
+   "skill_id": "local:node",
+   "skill_name": "Node.js",
+   "aliases": [
+    "node.js",
+    "nodejs",
+    "node js"
+   ]
+  },
+  {
+   "skill_id": "local:express",
+   "skill_name": "Express.js",
+   "aliases": [
+    "express",
+    "express.js",
+    "expressjs"
+   ]
+  },
+  {
+   "skill_id": "local:django",
+   "skill_name": "Django",
+   "aliases": [
+    "django"
+   ]
+  },
+  {
+   "skill_id": "local:flask",
+   "skill_name": "Flask",
+   "aliases": [
+    "flask"
+   ]
+  },
+  {
+   "skill_id": "local:fastapi",
+   "skill_name": "FastAPI",
+   "aliases": [
+    "fastapi"
+   ]
+  },
+  {
+   "skill_id": "local:spring",
+   "skill_name": "Spring Boot",
+   "aliases": [
+    "spring",
+    "spring boot"
+   ]
+  },
+  {
+   "skill_id": "local:dotnet",
+   "skill_name": ".NET",
+   "aliases": [
+    ".net",
+    "dotnet",
+    "asp.net"
+   ]
+  },
+  {
+   "skill_id": "local:rest",
+   "skill_name": "REST APIs",
+   "aliases": [
+    "rest api",
+    "rest apis",
+    "restful api",
+    "restful apis"
+   ]
+  },
+  {
+   "skill_id": "local:graphql",
+   "skill_name": "GraphQL",
+   "aliases": [
+    "graphql"
+   ]
+  },
+  {
+   "skill_id": "local:grpc",
+   "skill_name": "gRPC",
+   "aliases": [
+    "grpc"
+   ]
+  },
+  {
+   "skill_id": "local:aws",
+   "skill_name": "Amazon Web Services",
+   "aliases": [
+    "amazon web services",
+    "aws bedrock",
+    "ec2",
+    "s3",
+    "lambda"
+   ],
+   "acronyms": [
+    "aws"
+   ]
+  },
+  {
+   "skill_id": "local:azure",
+   "skill_name": "Microsoft Azure",
+   "aliases": [
+    "azure",
+    "ms azure",
+    "microsoft azure",
+    "azure cloud"
+   ]
+  },
+  {
+   "skill_id": "local:gcp",
+   "skill_name": "Google Cloud Platform",
+   "aliases": [
+    "google cloud",
+    "google cloud platform"
+   ],
+   "acronyms": [
+    "gcp"
+   ]
+  },
+  {
+   "skill_id": "local:cloud",
+   "skill_name": "Cloud Computing",
+   "aliases": [
+    "cloud computing",
+    "cloud platforms",
+    "cloud services",
+    "cloud infrastructure"
+   ]
+  },
+  {
+   "skill_id": "local:docker",
+   "skill_name": "Docker",
+   "aliases": [
+    "docker",
+    "containerisation",
+    "containerization"
+   ]
+  },
+  {
+   "skill_id": "local:kubernetes",
+   "skill_name": "Kubernetes",
+   "aliases": [
+    "kubernetes"
+   ],
+   "acronyms": [
+    "k8s"
+   ]
+  },
+  {
+   "skill_id": "local:terraform",
+   "skill_name": "Terraform",
+   "aliases": [
+    "terraform",
+    "infrastructure as code"
+   ]
+  },
+  {
+   "skill_id": "local:ansible",
+   "skill_name": "Ansible",
+   "aliases": [
+    "ansible"
+   ]
+  },
+  {
+   "skill_id": "local:jenkins",
+   "skill_name": "Jenkins",
+   "aliases": [
+    "jenkins"
+   ]
+  },
+  {
+   "skill_id": "local:cicd",
+   "skill_name": "CI/CD",
+   "aliases": [
+    "ci/cd",
+    "continuous integration",
+    "continuous delivery",
+    "github actions",
+    "azure devops"
+   ]
+  },
+  {
+   "skill_id": "local:devops",
+   "skill_name": "DevOps",
+   "aliases": [
+    "devops",
+    "sre",
+    "site reliability"
+   ]
+  },
+  {
+   "skill_id": "local:linux",
+   "skill_name": "Linux",
+   "aliases": [
+    "linux",
+    "unix"
+   ]
+  },
+  {
+   "skill_id": "local:git",
+   "skill_name": "Git",
+   "aliases": [
+    "git",
+    "github",
+    "gitlab",
+    "version control"
+   ]
+  },
+  {
+   "skill_id": "local:monitoring",
+   "skill_name": "Monitoring & Observability",
+   "aliases": [
+    "prometheus",
+    "grafana",
+    "datadog",
+    "observability"
+   ]
+  },
+  {
+   "skill_id": "local:spark",
+   "skill_name": "Apache Spark",
+   "aliases": [
+    "apache spark",
+    "pyspark",
+    "spark"
+   ]
+  },
+  {
+   "skill_id": "local:hadoop",
+   "skill_name": "Hadoop",
+   "aliases": [
+    "hadoop",
+    "hdfs",
+    "mapreduce"
+   ]
+  },
+  {
+   "skill_id": "local:kafka",
+   "skill_name": "Apache Kafka",
+   "aliases": [
+    "kafka",
+    "apache kafka"
+   ]
+  },
+  {
+   "skill_id": "local:airflow",
+   "skill_name": "Apache Airflow",
+   "aliases": [
+    "apache airflow",
+    "airflow"
+   ]
+  },
+  {
+   "skill_id": "local:etl",
+   "skill_name": "ETL",
+   "aliases": [
+    "etl",
+    "elt",
+    "data pipelines",
+    "data pipeline"
+   ]
+  },
+  {
+   "skill_id": "local:dbt",
+   "skill_name": "dbt",
+   "aliases": [
+    "dbt"
+   ]
+  },
+  {
+   "skill_id": "local:data_warehouse",
+   "skill_name": "Data Warehousing",
+   "aliases": [
+    "data warehouse",
+    "data warehousing",
+    "dimensional modeling"
+   ]
+  },
+  {
+   "skill_id": "local:ml",
+   "skill_name": "Machine Learning",
+   "aliases": [
+    "machine learning",
+    "machine-learning",
+    "foundations of machine learning",
+    "foundation of machine learning"
+   ],
+   "acronyms": [
+    "ml"
+   ]
+  },
+  {
+   "skill_id": "local:dl",
+   "skill_name": "Deep Learning",
+   "aliases": [
+    "deep learning",
+    "neural networks"
+   ],
+   "acronyms": [
+    "dl"
+   ]
+  },
+  {
+   "skill_id": "local:nlp",
+   "skill_name": "Natural Language Processing",
+   "aliases": [
+    "natural language processing"
+   ],
+   "acronyms": [
+    "nlp"
+   ]
+  },
+  {
+   "skill_id": "local:cv",
+   "skill_name": "Computer Vision",
+   "aliases": [
+    "computer vision",
+    "image processing"
+   ]
+  },
+  {
+   "skill_id": "local:genai",
+   "skill_name": "Generative AI",
+   "aliases": [
+    "generative ai",
+    "genai",
+    "diffusion models",
+    "stable diffusion",
+    "large language models",
+    "llms"
+   ],
+   "acronyms": [
+    "llm"
+   ]
+  },
+  {
+   "skill_id": "local:rag",
+   "skill_name": "Retrieval-Augmented Generation",
+   "aliases": [
+    "retrieval augmented generation",
+    "retrieval-augmented generation"
+   ],
+   "acronyms": [
+    "rag"
+   ]
+  },
+  {
+   "skill_id": "local:langchain",
+   "skill_name": "LangChain",
+   "aliases": [
+    "langchain",
+    "llamaindex"
+   ]
+  },
+  {
+   "skill_id": "local:faiss",
+   "skill_name": "Vector Search",
+   "aliases": [
+    "faiss",
+    "vector search",
+    "vector database",
+    "pinecone",
+    "chroma"
+   ]
+  },
+  {
+   "skill_id": "local:huggingface",
+   "skill_name": "Hugging Face",
+   "aliases": [
+    "hugging face",
+    "huggingface",
+    "transformers library"
+   ]
+  },
+  {
+   "skill_id": "local:transformers",
+   "skill_name": "Transformer Models",
+   "aliases": [
+    "transformer",
+    "transformers",
+    "vision transformer",
+    "bert",
+    "gpt"
+   ]
+  },
+  {
+   "skill_id": "local:rnn_lstm",
+   "skill_name": "RNN/LSTM",
+   "aliases": [
+    "rnn",
+    "lstm",
+    "gru",
+    "recurrent neural network"
+   ]
+  },
+  {
+   "skill_id": "local:cnn",
+   "skill_name": "Convolutional Neural Networks",
+   "aliases": [
+    "cnn",
+    "convolutional neural network"
+   ]
+  },
+  {
+   "skill_id": "local:autoencoder",
+   "skill_name": "Autoencoders",
+   "aliases": [
+    "autoencoder",
+    "autoencoders"
+   ]
+  },
+  {
+   "skill_id": "local:knowledge_distillation",
+   "skill_name": "Knowledge Distillation",
+   "aliases": [
+    "knowledge distillation"
+   ]
+  },
+  {
+   "skill_id": "local:reinforcement",
+   "skill_name": "Reinforcement Learning",
+   "aliases": [
+    "reinforcement learning"
+   ]
+  },
+  {
+   "skill_id": "local:mlops",
+   "skill_name": "MLOps",
+   "aliases": [
+    "mlops",
+    "model deployment",
+    "model serving",
+    "mlflow"
+   ]
+  },
+  {
+   "skill_id": "local:pytorch",
+   "skill_name": "PyTorch",
+   "aliases": [
+    "pytorch",
+    "torch"
+   ]
+  },
+  {
+   "skill_id": "local:tensorflow",
+   "skill_name": "TensorFlow",
+   "aliases": [
+    "tensorflow",
+    "keras"
+   ]
+  },
+  {
+   "skill_id": "local:sklearn",
+   "skill_name": "scikit-learn",
+   "aliases": [
+    "scikit-learn",
+    "scikit learn",
+    "sklearn"
+   ]
+  },
+  {
+   "skill_id": "local:xgboost",
+   "skill_name": "XGBoost",
+   "aliases": [
+    "xgboost",
+    "lightgbm",
+    "gradient boosting",
+    "catboost"
+   ]
+  },
+  {
+   "skill_id": "local:random_forest",
+   "skill_name": "Random Forest",
+   "aliases": [
+    "random forest",
+    "random forests"
+   ]
+  },
+  {
+   "skill_id": "local:decision_tree",
+   "skill_name": "Decision Trees",
+   "aliases": [
+    "decision tree",
+    "decision trees"
+   ]
+  },
+  {
+   "skill_id": "local:logistic_regression",
+   "skill_name": "Logistic Regression",
+   "aliases": [
+    "logistic regression",
+    "linear regression"
+   ]
+  },
+  {
+   "skill_id": "local:pandas",
+   "skill_name": "Pandas",
+   "aliases": [
+    "pandas"
+   ]
+  },
+  {
+   "skill_id": "local:numpy",
+   "skill_name": "NumPy",
+   "aliases": [
+    "numpy"
+   ]
+  },
+  {
+   "skill_id": "local:matplotlib",
+   "skill_name": "Matplotlib",
+   "aliases": [
+    "matplotlib"
+   ]
+  },
+  {
+   "skill_id": "local:seaborn",
+   "skill_name": "Seaborn",
+   "aliases": [
+    "seaborn"
+   ]
+  },
+  {
+   "skill_id": "local:feature_eng",
+   "skill_name": "Feature Engineering",
+   "aliases": [
+    "feature engineering",
+    "feature selection",
+    "dimensionality reduction"
+   ]
+  },
+  {
+   "skill_id": "local:eda",
+   "skill_name": "Data Analysis",
+   "aliases": [
+    "data analysis",
+    "data analytics",
+    "exploratory data analysis"
+   ],
+   "acronyms": [
+    "eda"
+   ]
+  },
+  {
+   "skill_id": "local:statistics",
+   "skill_name": "Statistics",
+   "aliases": [
+    "statistics",
+    "statistical analysis",
+    "probability and statistics",
+    "hypothesis testing",
+    "a/b testing"
+   ]
+  },
+  {
+   "skill_id": "local:data_viz",
+   "skill_name": "Data Visualization",
+   "aliases": [
+    "data visualization",
+    "data visualisation",
+    "dashboards"
+   ]
+  },
+  {
+   "skill_id": "local:cross_validation",
+   "skill_name": "Cross-Validation",
+   "aliases": [
+    "cross-validation",
+    "cross validation"
+   ]
+  },
+  {
+   "skill_id": "local:cybersecurity",
+   "skill_name": "Cybersecurity",
+   "aliases": [
+    "cybersecurity",
+    "cyber security",
+    "information security",
+    "network security"
+   ]
+  },
+  {
+   "skill_id": "local:malware_analysis",
+   "skill_name": "Malware Analysis",
+   "aliases": [
+    "malware analysis",
+    "static analysis",
+    "reverse engineering",
+    "androguard",
+    "practical malware analysis",
+    "dynamic analysis"
+   ]
+  },
+  {
+   "skill_id": "local:pentest",
+   "skill_name": "Penetration Testing",
+   "aliases": [
+    "penetration testing",
+    "pentesting",
+    "ethical hacking",
+    "vulnerability assessment"
+   ]
+  },
+  {
+   "skill_id": "local:wireshark",
+   "skill_name": "Wireshark",
+   "aliases": [
+    "wireshark",
+    "tcpdump"
+   ]
+  },
+  {
+   "skill_id": "local:mininet",
+   "skill_name": "Mininet",
+   "aliases": [
+    "mininet"
+   ]
+  },
+  {
+   "skill_id": "local:cryptography",
+   "skill_name": "Cryptography",
+   "aliases": [
+    "cryptography",
+    "encryption",
+    "pki"
+   ]
+  },
+  {
+   "skill_id": "local:burp",
+   "skill_name": "Burp Suite",
+   "aliases": [
+    "burp suite",
+    "metasploit",
+    "nmap"
+   ]
+  },
+  {
+   "skill_id": "local:android",
+   "skill_name": "Android Development",
+   "aliases": [
+    "android development",
+    "android sdk",
+    "jetpack compose"
+   ]
+  },
+  {
+   "skill_id": "local:ios",
+   "skill_name": "iOS Development",
+   "aliases": [
+    "ios development",
+    "swiftui"
+   ]
+  },
+  {
+   "skill_id": "local:flutter",
+   "skill_name": "Flutter",
+   "aliases": [
+    "flutter",
+    "react native"
+   ]
+  },
+  {
+   "skill_id": "local:testing",
+   "skill_name": "Software Testing",
+   "aliases": [
+    "unit testing",
+    "integration testing",
+    "pytest",
+    "junit",
+    "selenium",
+    "test automation"
+   ]
+  },
+  {
+   "skill_id": "local:agile",
+   "skill_name": "Agile Methodology",
+   "aliases": [
+    "agile",
+    "scrum",
+    "kanban",
+    "jira"
+   ]
+  },
+  {
+   "skill_id": "local:powerbi",
+   "skill_name": "Power BI",
+   "aliases": [
+    "power bi",
+    "powerbi",
+    "microsoft power bi"
+   ]
+  },
+  {
+   "skill_id": "local:tableau",
+   "skill_name": "Tableau",
+   "aliases": [
+    "tableau"
+   ]
+  },
+  {
+   "skill_id": "local:excel",
+   "skill_name": "Microsoft Excel",
+   "aliases": [
+    "microsoft excel",
+    "ms excel",
+    "excel"
+   ]
+  },
+  {
+   "skill_id": "local:communication",
+   "skill_name": "Communication",
+   "aliases": [
+    "communication",
+    "communication skills",
+    "effective communication"
+   ]
+  },
+  {
+   "skill_id": "local:leadership",
+   "skill_name": "Leadership",
+   "aliases": [
+    "leadership",
+    "team leadership"
+   ]
+  },
+  {
+   "skill_id": "local:teamwork",
+   "skill_name": "Teamwork",
+   "aliases": [
+    "teamwork",
+    "collaboration"
+   ]
+  },
+  {
+   "skill_id": "local:problem_solving",
+   "skill_name": "Problem Solving",
+   "aliases": [
+    "problem solving",
+    "problem-solving",
+    "analytical thinking"
+   ]
+  }
+ ],
+ "certification_skill_map": {
+  "azure ai engineer associate": [
+   "local:azure",
+   "local:ml"
+  ],
+  "azure data engineer associate": [
+   "local:azure",
+   "local:etl"
+  ],
+  "azure fundamentals": [
+   "local:azure"
+  ],
+  "aws certified solutions architect": [
+   "local:aws"
+  ],
+  "aws certified cloud practitioner": [
+   "local:aws"
+  ],
+  "aws certified developer": [
+   "local:aws"
+  ],
+  "google cloud professional data engineer": [
+   "local:gcp",
+   "local:etl"
+  ],
+  "certified kubernetes administrator": [
+   "local:kubernetes"
+  ],
+  "tensorflow developer certificate": [
+   "local:tensorflow",
+   "local:dl"
+  ],
+  "certified ethical hacker": [
+   "local:pentest",
+   "local:cybersecurity"
+  ],
+  "comptia security+": [
+   "local:cybersecurity"
+  ],
+  "oracle certified java": [
+   "local:java"
+  ]
+ }
+}
