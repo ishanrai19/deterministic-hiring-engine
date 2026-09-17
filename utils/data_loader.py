@@ -77,18 +77,40 @@ def load_candidate_from_screening_json(profile: Dict, applied_job_id: Optional[s
         if rank > best_rank:
             best_rank, best_degree = rank, degree
 
-    resume_text_parts = [profile.get("source_resume_path", "")] + skills
+    # Projects carry real semantic signal (what the candidate actually built,
+    # in their own words) that skills[] alone doesn't capture -- include them
+    # in resume_text so semantic_similarity() can see it. Schema 1.1 adds this
+    # field; schema 1.0 profiles simply won't have it (.get returns []).
+    project_text_parts = []
+    for proj in profile.get("projects", []) or []:
+        title = proj.get("title", "")
+        description = proj.get("description", "")
+        project_text_parts.append(f"{title}. {description}".strip())
+
+    resume_text_parts = [profile.get("source_resume_path", "")] + skills + project_text_parts
     for wh in profile.get("work_history", []) or []:
         resume_text_parts.append(f"{wh.get('title', '')} at {wh.get('company', '')}")
+
+    raw_experience_years = profile.get("experience_years")
 
     return {
         "candidate_id": profile.get("candidate_id"),
         "applied_job_id": applied_job_id,
         "skills": skills,
         "evidence_counts": evidence_counts,
-        "experience_years": profile.get("experience_years", 0.0),
+        # NOTE: if the Screening Agent output experience_years: null (couldn't
+        # extract it), this stays None here -- NOT silently defaulted to 0.0.
+        # utils.scoring.score_experience() treats None as 0 for the actual
+        # score (a conservative default), but MatchingAgent.match() checks
+        # this raw value to add an explicit "extraction failed" evidence line
+        # so a 0 score isn't mistaken for a verified 0 years of experience.
+        "experience_years": raw_experience_years,
         "education_level": best_degree,
         "resume_text": " ".join(p for p in resume_text_parts if p),
+        # Pass-through metadata, not used in scoring -- surfaced in match()
+        # supporting_evidence and available to the dashboard for a
+        # "partial parse, verify manually" flag.
+        "parsing_status": profile.get("parsing_status"),
     }
 
 

@@ -44,8 +44,7 @@ from __future__ import annotations
 import datetime as _dt
 from typing import Dict, List, Optional
 
-from utils.scoring import build_feature_vector
-from utils.scoring import semantic_similarity
+from utils.scoring import build_feature_vector, semantic_similarity
 from utils.supervised_ranker import SupervisedRanker
 
 DEFAULT_WEIGHTS = {
@@ -95,6 +94,21 @@ class MatchingAgent:
         fit_score = self._compute_fit_score(scoring_method, vector)
         shortlisted = fit_score >= self.shortlist_threshold
 
+        supporting_evidence = self._build_evidence(
+            skills_detail, experience_detail, education_detail, semantic_score
+        )
+        # Distinguish "candidate has 0 years experience" (verified) from
+        # "extraction failed, defaulted to 0" (unverified) -- these must not
+        # look the same to a recruiter reading supporting_evidence.
+        if candidate.get("experience_years") is None:
+            supporting_evidence.insert(
+                0,
+                "NOTE: experience_years could not be extracted from the resume "
+                "(parsing_status="
+                f"{candidate.get('parsing_status', 'unknown')}); scored as 0 years for "
+                "ranking purposes. Verify experience manually before rejecting on this basis.",
+            )
+
         return {
             "schema_version": SCHEMA_VERSION,
             "candidate_id": candidate.get("candidate_id"),
@@ -113,9 +127,8 @@ class MatchingAgent:
             "shortlisted": shortlisted,
             "experience_detail": experience_detail,
             "education_detail": education_detail,
-            "supporting_evidence": self._build_evidence(
-                skills_detail, experience_detail, education_detail, semantic_score
-            ),
+            "candidate_parsing_status": candidate.get("parsing_status"),
+            "supporting_evidence": supporting_evidence,
             "matched_at": _dt.datetime.utcnow().isoformat() + "Z",
         }
 
